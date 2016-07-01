@@ -16,48 +16,167 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+    var firstArr = [];
+    if(!(n)) {
+      return array[0];
+    }
+    else {
+      if(array.length >= n) {
+        for(var i = 0; i < n; i++) {
+        firstArr.push(array[i]);
+        }
+        return firstArr;
+      }
+      else {
+        return array;
+      }
+    }
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
+  //
+  // this tests true but doesn't work in repl.it
+  // _.last = function(array, n) {
+  //   var lastArr = [];
+  //   if(!(n)) {
+  //     return array[array.length-1];
+  //   }
+  //   else {
+  //   	if(array.length >= n) {
+  //     		for(var i = n; i > 0; i--) {
+  //     		lastArr.push(array[i]);
+  //         lastArr.reverse();
+  //     		}
+  //     		return lastArr;
+  //     	}
+  //     	else {
+  //     		return array;
+  //     	}
+  //   }
+  // };
+  // this doesn't test true, but also doesn't work in repl.it
   _.last = function(array, n) {
-  };
+     var lastArr = [];
+     if(!(n)) {
+       return array[array.length-1];
+     }
+     else if (n >= array.length) {
+        return array;
+       	}
+    else if (n < array.length) {
+    	for(var i = array.length - n; i <= n; i++) {
+    		lastArr.push(array[i]);
+       	}
+       	return lastArr;
+     }
+
+};
+
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+
+    if(Array.isArray(collection)) {
+      //collection is array
+      for(var i = 0; i < collection.length; i++) {
+        iterator(collection[i], collection.indexOf(collection[i]), collection);
+      }
+    } else {
+      //collection is object
+      for(var i in collection) {
+        iterator(collection[i], i, collection);
+      }
+    }
   };
+
+
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+    for(var i = 0; i < array.length; i++) {
+      if(array[i] === target) {
+      	return i;
+      }
+    }
+    return -1;
   };
+
 
   // Return all elements of an array that pass a truth test ('iterator' function argument)
   _.filter = function(collection, iterator) {
+	var returnArr = [];
+    for(var i = 0; i < collection.length; i++) {
+      if(iterator(collection[i])) {
+        returnArr.push(collection[i]);
+      }
+
+    }
+    return returnArr;
   };
 
   // Return all elements of an array that don't pass a truth test (the 'iterator' function argument)
   _.reject = function(collection, iterator) {
+	var returnArr = [];
+    for(var i = 0; i < collection.length; i++) {
+      if(iterator(collection[i]) === false) {
+        returnArr.push(collection[i]);
+      }
+
+    }
+    return returnArr;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var returnArr = [];
+    for(var i = 0; i < array.length; i++) {
+      if(returnArr.indexOf(array[i]) === -1) {
+        returnArr.push(array[i]);
+      }
+    }
+    return returnArr;
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    for(var i in array)  {
+      array[i] = iterator(array[i]);
+    }
+  return array;
+
   };
 
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
+    var rElements = [];
+    for(var i = 0; i < array.length; i++) {
+    	for(var j in array[i]) {
+      		if(j === propertyName) {
+        	rElements.push(array[i][j]);
+      }
+    }
+    }
+    return rElements;
   };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
+    for(var i = 0; i < list.length; i++) {
+      var item = list[i];
+      if (typeOf(methodName) === 'string') {
+        item[methodName](args);
+      }
+      else {
+        methodName.call(item, args);
+      }
+    }
+    return list;
   };
 
   // Reduces an array or object to a single value by repetitively calling
