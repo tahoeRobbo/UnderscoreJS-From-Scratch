@@ -258,11 +258,27 @@ return false;
   // Extend a given object with all the properties of the passed in
   // object(s).
   _.extend = function(obj) {
+    for(var i = 1; i < arguments.length; i++) {
+    	for(var j in arguments[i]) {
+    		obj[j] = arguments[i][j];
+    	}
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
+  //
+  //Why does taking in falsy values not work but undefined does not
   _.defaults = function(obj) {
+    for(var i = 1; i < arguments.length; i++) {
+      for(var j in arguments[i]) {
+        if((obj[j]) === undefined) {
+        obj[j] = arguments[i][j];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -274,6 +290,7 @@ return false;
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
+    
   };
 
   // Memoize an expensive function by storing its results. You may assume
