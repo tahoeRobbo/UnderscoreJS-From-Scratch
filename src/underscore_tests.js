@@ -166,37 +166,85 @@ var _ = { };
   };
 
   // Calls the method named by methodName on each value in the list.
-  _.invoke = function(list, methodName, args) {
-    for(var i = 0; i < list.length; i++) {
-      var item = list[i];
-      if (typeOf(methodName) === 'string') {
-        item[methodName](args);
-      }
-      else {
-        methodName.call(item, args);
-      }
-    }
-    return list;
-  };
+  //
+  //commented out because current state breaks rest of code
+  // _.invoke = function(list, methodName, args) {
+  //   for(var i = 0; i < list.length; i++) {
+  //     var item = list[i];
+  //     if (typeOf(methodName) === 'string') {
+  //       item[methodName](args);
+  //     }
+  //     else {
+  //       methodName.call(item, args);
+  //     }
+  //   }
+  //   return list;
+  // };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
-  _.reduce = function(collection, iterator, initialValue) {
+  //
+  //come back to this one, understand how it really works, still fuzzy
+  _.reduce = function(collection, iterator, accumulator) {
+    var start = accumulator === undefined;
+    _.each(collection, function(item) {
+      if (start) {
+        accumulator = item;
+        start = false;
+      } else {
+        accumulator = iterator(accumulator, item);
+      }
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
+    var existence = false;
+    for(var i in collection) {
+      if(collection[i] === target) {
+        existence = true;
+      }
+    }
+    return existence;
   };
 
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    if(collection.length === 0) {
+      return true;
+    }
+    else if (!(iterator)) {
+      return true;
+      }
+    for(var i in collection) {
+      if (!(iterator(collection[i]))){
+        return false;
+      }
+      }
+    return true;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    if (!(iterator)) {
+        for(var i in collection) {
+          if (collection[i]) {
+            return true;
+          }
+        }
+      }
+    else {
+      for (var i in collection) {
+        if (iterator(collection[i])) {
+          return true;
+        }
+      }
+    }
+return false;
   };
 
 
