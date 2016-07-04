@@ -290,7 +290,15 @@ return false;
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
-    
+      var alreadyCalled = false;
+      var result;
+      return function() {
+          if (!alreadyCalled) {
+              result = func.apply(this, arguments);
+              alreadyCalled = true;
+          }
+          return result;
+      };
   };
 
   // Memoize an expensive function by storing its results. You may assume
@@ -300,6 +308,17 @@ return false;
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var cache = {};
+    return function(){
+      var args = JSON.stringify(arguments[0]);
+        if (cache[args]) {
+          return cache[args];
+        } else {
+          cache[args] = func.apply(this, arguments);
+          return cache[args];
+        }
+      return cache[args];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
